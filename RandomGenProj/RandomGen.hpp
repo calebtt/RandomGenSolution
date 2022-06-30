@@ -2,7 +2,6 @@
 #include <string>
 #include <random>
 #include <algorithm>
-#include <iomanip>
 #include <limits>
 #include <numeric>
 #include <ranges>
@@ -22,7 +21,7 @@ namespace sds
 	private:
 		std::random_device rd;
 		std::mt19937 randomElementGenerator{ rd() }; // seed mersenne engine
-	public:
+	private:
 		/// <typeparam name="T">Typename of values you want in the container.</typeparam>
 		///	<typeparam name="X">Distribution template param to use, not less than sizeof an int</typeparam>
 		/// <summary>Helper function used to fill a container</summary>
@@ -31,8 +30,9 @@ namespace sds
 		///	<param name="maxLength">the maximum count of the type T in the filled range.</param>
 		///	<param name="minValue">minimum integer value used in the distribution.</param>
 		///	<param name="maxValue">maximum integer value used in the distribution.</param>
-		///	<throws> exception on failure to resize container type. </throws>
-		template <typename T, typename X> requires std::integral<T>&& std::integral<X>
+		///	<exception cref="bad_alloc">Throws <c>std::bad_alloc</c> on failure to resize container type. </exception>
+		template <typename T, typename X>
+		requires std::integral<T> && std::integral<X>
 		constexpr void DoGenerate(std::ranges::range auto& containerType,
 			const CountType minLength,
 			const CountType maxLength,
@@ -60,6 +60,7 @@ namespace sds
 			//the distribution uses the generator engine to get the value
 			return static_cast<T>(distElementPossibility(randomElementGenerator));
 		}
+	public:
 		/// <summary>Returns a vector of a random number of type <c>T</c> with randomized content using a uniform distribution. T must be default constructable.</summary>
 		///	<param name="maxLength">the maximum count of the type T in the returned vector.</param>
 		///	<param name="minLength">the minimum count of the type T in the returned vector.</param>
