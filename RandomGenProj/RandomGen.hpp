@@ -10,6 +10,14 @@
 
 namespace sds
 {
+	/// <summary>
+	/// Implementation for RandomGen.
+	///	A better random generation utility, as a class object,
+	///	with min and max distribution value range and templated for string type.
+	///	(using declaration for standard config).
+	/// </summary>
+	/// <typeparam name="StrType"> By default, a single byte element string that uses the implementation defined signed-ness of the type 'char' </typeparam>
+	/// <typeparam name="WStrType">By default, a wide character or otherwise unicode/larger character type that uses the implementation defined signed-ness of the type 'wchar_t'</typeparam>
 	template<class StrType = std::string, class WStrType = std::wstring>
 	struct RandomGenImpl
 	{
@@ -188,8 +196,8 @@ namespace sds
 	};
 
 	/// <summary>
-	/// Using declaration for standard config.
-	/// </summary>
-	using RandomGen = RandomGenImpl<std::string, std::wstring>;
+	///	Using declaration for standard config.
+	///	</summary>
+	using RandomGen = RandomGenImpl<>;
 	
 }
