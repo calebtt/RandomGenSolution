@@ -3,20 +3,16 @@
 #include <vector>
 #include <algorithm>
 #include <sstream>
-#include <format>
 #include "RandomGen.hpp"
 
-
-
 template <typename T, typename X>
-void FillContainerTest(sds::RandomGen& ro, auto &outputStream, const int minLength = 10, const int maxLength = 10)
+void FillContainerTest(sds::RandomGen& ro, auto& outputStream, const int minLength = 10, const int maxLength = 10)
 {
-	using std::for_each, std::endl, std::cout, std::begin, std::end;
-	using std::format; // modify this if your compiler doesn't have format yet
+	using std::for_each, std::cout, std::begin, std::end;
 	//filling a container T with random X
 	T fillContainer{};
 	const bool result = ro.FillContainerRandom<X>(fillContainer, minLength, maxLength);
-	outputStream << "Printing some values from a " << typeid(X).name() << std::endl;
+	outputStream << "\nPrinting some values from a " << typeid(X).name() << '\n';
 	if (result)
 	{
 		for (const auto elem : fillContainer)
@@ -26,10 +22,12 @@ void FillContainerTest(sds::RandomGen& ro, auto &outputStream, const int minLeng
 			else
 				outputStream << std::dec << "[" << static_cast<X>(elem) << "]";
 		}
-		outputStream << std::endl << std::endl;
+		outputStream << "\n\n";
 	}
 	else
-		outputStream << format("Error filling container in FillContainerTests() where T:{0}, X:{1}, strm:{2}", typeid(T).name(), typeid(X).name(), typeid(outputStream).name());
+	{
+		outputStream << "Error filling container in FillContainerTests() where T:" << typeid(T).name() << ", X:" << typeid(X).name() << ", strm:" << typeid(outputStream).name() << '\n';
+	}
 }
 
 int main()
@@ -40,7 +38,7 @@ int main()
 	 * would not parse! The compiler could not parse that line, it was very obviously a bug, so be aware if you use C++20 concepts in VS2019.
 	 */
 	using namespace std;
-	constexpr size_t NumberOfItems= 10;
+	constexpr size_t NumberOfItems = 10;
 	constexpr size_t MaxLengthOfStrings = 10;
 	constexpr size_t MinLengthOfStrings = 3;
 	constexpr size_t MinLength = 10;
