@@ -11,11 +11,7 @@
 template <typename T, typename X>
 void FillContainerTest(sds::RandomGen& ro, auto &outputStream, const int minLength = 10, const int maxLength = 10)
 {
-	using std::for_each;
-	using std::endl;
-	using std::cout;
-	using std::begin;
-	using std::end;
+	using std::for_each, std::endl, std::cout, std::begin, std::end;
 	using std::format; // modify this if your compiler doesn't have format yet
 	//filling a container T with random X
 	T fillContainer{};

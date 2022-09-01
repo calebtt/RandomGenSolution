@@ -52,7 +52,7 @@ namespace sds
 			//the distribution uses the generator engine to get the value
 			const auto tLength = static_cast<std::size_t>(distLengthPossibility(randomElementGenerator));
 			containerType.resize(tLength); // <-- can fail to allocate the memory.
-			const auto GenLambda = [&]()constexpr { return static_cast<T>(distElementPossibility(randomElementGenerator)); };
+			const auto GenLambda = [&]() constexpr { return static_cast<T>(distElementPossibility(randomElementGenerator)); };
 			std::ranges::generate(containerType, GenLambda);
 		}
 		/// <typeparam name="T">Typename of value you want in the return value.</typeparam>
@@ -62,7 +62,8 @@ namespace sds
 		///	<param name="maxValue">the maximum value of the type T in the returned value.</param>
 		///	<returns>T with random value</returns>
 		template <typename T, typename X> requires std::integral<T>&& std::integral<X>
-		[[nodiscard]] constexpr T DoGenerateSingle(const T minValue, const T maxValue) noexcept
+		[[nodiscard]]
+		constexpr T DoGenerateSingle(const T minValue, const T maxValue) noexcept
 		{
 			std::uniform_int_distribution<X> distElementPossibility(minValue, maxValue);
 			//the distribution uses the generator engine to get the value
@@ -73,8 +74,11 @@ namespace sds
 		///	<param name="maxLength">the maximum count of the type T in the returned vector.</param>
 		///	<param name="minLength">the minimum count of the type T in the returned vector.</param>
 		/// <returns> a vector of type T with randomized content. Empty vector on error. </returns>
-		template<typename T> requires std::integral<T> && (!std::same_as<T, bool>)
-			[[nodiscard]] constexpr auto BuildRandomVector(const CountType minLength, const CountType maxLength) -> std::vector<T>
+		template<typename T>
+		requires std::integral<T> && (!std::same_as<T, bool>)
+		[[nodiscard]]
+		constexpr auto BuildRandomVector(const CountType minLength, const CountType maxLength)
+		-> std::vector<T>
 		{
 			//arg error checking, returns empty vector as per description
 			if (minLength > maxLength || (maxLength <= 0) || (minLength <= 0))
@@ -102,7 +106,8 @@ namespace sds
 		///	<param name="maxLength">the maximum count of the type T in the returned vector.</param>
 		/// <returns> true on success, false on error.</returns>
 		template<typename T> requires std::integral<T> && (!std::same_as<T, bool>)
-			[[nodiscard]] constexpr bool FillContainerRandom(std::ranges::range auto& containerType, const CountType minLength, const CountType maxLength)
+		[[nodiscard]]
+		constexpr bool FillContainerRandom(std::ranges::range auto& containerType, const CountType minLength, const CountType maxLength)
 		{
 			//arg error checking, returns false as per description
 			if (minLength > maxLength || (maxLength <= 0) || (minLength <= 0))
@@ -123,7 +128,7 @@ namespace sds
 			}
 			return true;
 		}
-		/// <summary>Returns a vector of <c>std::string</c> with randomized content using a uniform distribution.<para>NOTE:
+		/// <summary>Returns a vector of <c>StringType</c> with randomized content using a uniform distribution.<para>NOTE:
 		///	The char type is a character representation type that efficiently encodes members of the basic execution character set.
 		///	The C++ compiler treats variables of type char, signed char, and unsigned char as having different types.
 		///	<para>***Microsoft - specific: Variables of type char are promoted to int as if from type signed char by default,
@@ -132,28 +137,32 @@ namespace sds
 		///	<param name="numberOfStrings">the number of strings in the returned vector.</param>
 		///	<param name="minLength">the minimum length of the strings in the returned vector.</param>
 		///	<param name="maxLength">the maximum length of the strings in the returned vector.</param>
-		/// <returns> a vector of std::string with randomized content. Empty vector on error. </returns>
-		[[nodiscard]] auto BuildRandomStringVector(const CountType numberOfStrings, const CountType minLength, const CountType maxLength)
+		/// <returns> a <c>std::vector</c> of <c>StringType</c> with randomized content. <b>Empty vector on error.</b> </returns>
+		[[nodiscard]]
+		auto BuildRandomStringVector(const CountType numberOfStrings, const CountType minLength, const CountType maxLength)
+		-> std::vector<StringType>
 		{
 			//arg error checking, returns empty vector as per description
 			if (minLength > maxLength || (maxLength <= 0) || (numberOfStrings <= 0) || (minLength <= 0))
 			{
-				return std::vector<StringType>();
+				return {};
 			}
-			std::vector<StringType> ret;
+			std::vector<StringType> ret{};
+			ret.reserve(numberOfStrings);
 			for (CountType i = 0; i < numberOfStrings; i++)
 			{
-				const auto tempString = RandomGenImpl::BuildRandomVector<CharType>(minLength, maxLength);
-				ret.emplace_back(StringType(tempString.begin(), tempString.end()));
+				const auto tempCharVector = RandomGenImpl::BuildRandomVector<CharType>(minLength, maxLength);
+				ret.emplace_back(StringType{ tempCharVector.begin(), tempCharVector.end() });
 			}
 			return ret;
 		}
-		/// <summary>Returns a vector of <c>std::wstring</c> with randomized content using a uniform distribution.</summary>
+		/// <summary>Returns a vector of <c>WStringType</c> with randomized content using a uniform distribution.</summary>
 		///	<param name="numberOfStrings">the number of strings in the returned vector.</param>
 		///	<param name="minLength">the minimum length of the strings in the returned vector.</param>
 		///	<param name="maxLength">the maximum length of the strings in the returned vector.</param>
-		/// <returns> a vector of std::wstring with randomized content. Empty vector on error. </returns>
-		[[nodiscard]] auto BuildRandomWStringVector(const CountType numberOfStrings, const CountType minLength, const CountType maxLength)
+		/// <returns> a vector of <c>WStringType</c> with randomized content. Empty vector on error. </returns>
+		[[nodiscard]]
+		auto BuildRandomWStringVector(const CountType numberOfStrings, const CountType minLength, const CountType maxLength)
 		{
 			//arg error checking, returns empty vector as per description
 			if (minLength > maxLength || (maxLength <= 0) || (numberOfStrings <= 0) || (minLength <= 0))
@@ -161,10 +170,11 @@ namespace sds
 				return std::vector<WStringType>();
 			}
 			std::vector<WStringType> ret;
+			ret.reserve(numberOfStrings);
 			for (CountType i = 0; i < numberOfStrings; i++)
 			{
 				const auto tempString = RandomGenImpl::BuildRandomVector<WCharType>(minLength, maxLength);
-				ret.emplace_back(WStringType(tempString.begin(), tempString.end()));
+				ret.emplace_back(WStringType{ tempString.begin(), tempString.end() });
 			}
 			return ret;
 		}
@@ -173,7 +183,8 @@ namespace sds
 		///	<param name="maxValue">the maximum value of the type T in the returned value.</param>
 		/// <returns> A type T with random value. Default constructed T on error. </returns>
 		template<typename T> requires std::integral<T> && (!std::same_as<T, bool>)
-			[[nodiscard]] constexpr T BuildRandomSingleValue(const T minValue = std::numeric_limits<T>::min(), const T maxValue = std::numeric_limits<T>::max()) noexcept
+		[[nodiscard]]
+		constexpr T BuildRandomSingleValue(const T minValue = std::numeric_limits<T>::min(), const T maxValue = std::numeric_limits<T>::max()) noexcept
 		{
 			//arg error checking, returns default constructed T as per description
 			if (minValue > maxValue)
