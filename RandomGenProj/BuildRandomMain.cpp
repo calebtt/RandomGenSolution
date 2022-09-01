@@ -99,7 +99,6 @@ int main()
 	cout << ss.str();
 	ss.str("");
 
-
 	//FillContainerTest<std::vector<bool>, bool>(ro, ss); // doesn't work for bool, constrained away
 
 	cout << "Enter to exit." << endl;
