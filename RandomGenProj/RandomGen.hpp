@@ -22,8 +22,6 @@ namespace sds
 	struct RandomGenImpl
 	{
 		using CountType = size_t;
-		using CharType = unsigned char;
-		using WCharType = wchar_t;
 		using StringType = StrType;
 		using WStringType = WStrType;
 	private:
@@ -151,7 +149,7 @@ namespace sds
 			ret.reserve(numberOfStrings);
 			for (CountType i = 0; i < numberOfStrings; i++)
 			{
-				const auto tempCharVector = RandomGenImpl::BuildRandomVector<CharType>(minLength, maxLength);
+				const auto tempCharVector = RandomGenImpl::BuildRandomVector<StringType::value_type>(minLength, maxLength);
 				ret.emplace_back(StringType{ tempCharVector.begin(), tempCharVector.end() });
 			}
 			return ret;
@@ -173,7 +171,7 @@ namespace sds
 			ret.reserve(numberOfStrings);
 			for (CountType i = 0; i < numberOfStrings; i++)
 			{
-				const auto tempString = RandomGenImpl::BuildRandomVector<WCharType>(minLength, maxLength);
+				const auto tempString = RandomGenImpl::BuildRandomVector<WStringType::value_type>(minLength, maxLength);
 				ret.emplace_back(WStringType{ tempString.begin(), tempString.end() });
 			}
 			return ret;
